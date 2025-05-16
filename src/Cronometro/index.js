@@ -4,8 +4,8 @@ import { GlobalContext } from "../../hooks/globalContext";
 import { vibrate, vibrateLong } from "../../utils";
 const Cronometro = ()=>
 {
-    const {timeCounting, statusWork, setStatusWork, resetTimer, setResetTimer} = useContext(GlobalContext);
-    const fiveMinutes = 5 * 2;
+    const {timeCounting, setTimeCounting, statusWork, toggleStatusWork, resetTimer, setResetTimer} = useContext(GlobalContext);
+    const fiveMinutes = 5 * 1;
     const twentyFiveMinutes = 25 * 1;
     const [timer, setTimer] = useState(twentyFiveMinutes);
     let interval = null;
@@ -26,37 +26,21 @@ const Cronometro = ()=>
         {
             text: 'Aceptar',
             onPress: () => {
-                if(statusWork == "work")
-                {
-                    setResetTimer(true);
-                    setStatusWork("break");
-                }
-                else if(statusWork == "break")
-                {
-                    setResetTimer(true);
-                    setStatusWork("work");
-                }
+                toggleStatusWork();
             },
         }
         ]);
     }
     //Se ejecuta según el estado de timeCounting
     useEffect(() =>
+    {
+        if (timeCounting)
         {
-        if (timeCounting && timer > 0)
-        {
-            interval = setInterval(() =>
-            {
+            interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer - 1);
             }, 1000);
         }
-        else if(timeCounting)
-        {
-            clearInterval(interval);
-            setTimerCounting(false);
-            notifyAlarm();
-        }
-        else if (!timeCounting && timer > 0)
+        else if (timer > 0)
         {
             clearInterval(interval);
         }
@@ -67,6 +51,13 @@ const Cronometro = ()=>
         }
         return () => clearInterval(interval);
     }, [timeCounting]);
+
+    useEffect(()=>{
+        if(timer <= 0)
+        {
+            setTimeCounting(false);
+        }
+    }, [timer]);
     
     //Se ejecuta al reiniciar el cronómetro
     useEffect(() => {
@@ -76,10 +67,11 @@ const Cronometro = ()=>
             {
                 setTimer(twentyFiveMinutes);
             }
-            else if(statusWork === "break")
+            else
             {
                 setTimer(fiveMinutes);
             }
+            setTimeCounting(true);
             setResetTimer(false);
         }
     }, [resetTimer]);

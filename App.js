@@ -13,8 +13,8 @@ export default function App() {
           <Cronometro />
           <Control />
           <View>
-            <Button title="Vibrar celular" onPress={vibrate} />
-            <Button title="Vibrar Largo" onPress={vibrateLong} />
+            {/* <Button title="Vibrar celular" onPress={vibrate} />
+            <Button title="Vibrar Largo" onPress={vibrateLong} /> */}
             <StatusBar style="auto" />
           </View>
         </View>

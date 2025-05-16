@@ -3,7 +3,7 @@ import { Button, View, Alert, StyleSheet } from "react-native";
 import { GlobalContext } from "../../hooks/globalContext";
 const Control = ()=>
 {
-    const {timeCounting, setTimeCounting, statusWork, setStatusWork, setResetTimer} = useContext(GlobalContext);
+    const {timeCounting, setTimeCounting, toggleStatusWork} = useContext(GlobalContext);
     const showAlertRestart = () =>
     {
         Alert.alert('REINICIAR CRONÓMETRO', '¿Quiere reiniciarlo en modo de trabajo o descanso?', [
@@ -17,8 +17,7 @@ const Control = ()=>
             onPress: () =>
             {
                 console.log('REINICIAR EN MODO DESCANSO')
-                setStatusWork("break");
-                setResetTimer(true);
+                toggleStatusWork("break");
             }
         },
         {
@@ -26,8 +25,7 @@ const Control = ()=>
             onPress: () =>
             {
                 console.log('REINICIAR EN MODO TRABAJO')
-                setStatusWork("work");
-                setResetTimer(true);
+                toggleStatusWork("work");
             }
         }
         ]);

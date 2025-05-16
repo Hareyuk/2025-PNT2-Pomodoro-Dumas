@@ -1,40 +1,69 @@
 import { useState, useEffect, useContext } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Alert, StyleSheet } from "react-native";
 import { GlobalContext } from "../../hooks/globalContext";
+import { vibrate, vibrateLong } from "../../utils";
 const Cronometro = ()=>
 {
     const {timeCounting, statusWork, setStatusWork, resetTimer, setResetTimer} = useContext(GlobalContext);
-    const fiveMinutes = 5 * 60;
-    const twentyFiveMinutes = 25 * 60;
+    const fiveMinutes = 5 * 2;
+    const twentyFiveMinutes = 25 * 1;
     const [timer, setTimer] = useState(twentyFiveMinutes);
     let interval = null;
-    
+    const getTxtAlarm = () =>
+    {
+        let txt = "Su tiempo de ";
+        if(statusWork == "work") txt += "trabajo";
+        if(statusWork == "break") txt += "descanso";
+        txt += " ha finalizado, ahora empieza su tiempo de ";
+        if(statusWork == "work") txt += "descanso";
+        if(statusWork == "break") txt += "trabajo";
+        return txt;
+    }
+    const notifyAlarm = () =>
+    {
+        vibrateLong();
+        Alert.alert('ALARMA', getTxtAlarm(), [
+        {
+            text: 'Aceptar',
+            onPress: () => {
+                if(statusWork == "work")
+                {
+                    setResetTimer(true);
+                    setStatusWork("break");
+                }
+                else if(statusWork == "break")
+                {
+                    setResetTimer(true);
+                    setStatusWork("work");
+                }
+            },
+        }
+        ]);
+    }
     //Se ejecuta según el estado de timeCounting
     useEffect(() =>
         {
-        if (timeCounting)
+        if (timeCounting && timer > 0)
         {
             interval = setInterval(() =>
             {
                 setTimer((prevTimer) => prevTimer - 1);
             }, 1000);
         }
-        else if (!timeCounting && timer !== 0)
+        else if(timeCounting)
+        {
+            clearInterval(interval);
+            setTimerCounting(false);
+            notifyAlarm();
+        }
+        else if (!timeCounting && timer > 0)
         {
             clearInterval(interval);
         }
         else
         {
-            if(statusWork == "work")
-            {
-                setResetTimer(true);
-                setStatusWork("break");
-            }
-            else if(statusWork == "break")
-            {
-                setResetTimer(true);
-                setStatusWork("work");
-            }
+            notifyAlarm();
+            clearInterval(interval);
         }
         return () => clearInterval(interval);
     }, [timeCounting]);
@@ -61,6 +90,7 @@ const Cronometro = ()=>
                 <View style={styles.insideCircle}>
                     <Text style={styles.whiteText}>Cronómetro</Text>
                     <Text style={[styles.whiteText, styles.bigNumbers]}>{Math.floor(timer > 60 ? `0${timer / 60}` : "00")}:{timer % 60 > 9 ? timer % 60 : `0${timer % 60}`}</Text>
+                    <Text style={styles.whiteText}>Modo {statusWork === "work" ? "trabajo" : "descanso"}</Text>
                 </View>
             </View>
         </>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Button, View, Alert } from "react-native";
+import { Button, View, Alert, StyleSheet } from "react-native";
 import { GlobalContext } from "../../hooks/globalContext";
 const Control = ()=>
 {
@@ -34,12 +34,26 @@ const Control = ()=>
     }
     return(
         <>
-            <View>
-                <Button title={timeCounting ? "Pausar" : "Continuar"} onPress={()=>setTimeCounting(!timeCounting)} />
-                <Button title="Reiniciar" onPress={showAlertRestart} />
+            <View style={[styles.marginTnB, styles.boxControl]}>
+                <Button style={styles.btnColor} title={timeCounting ? "Pausar" : "Continuar"} onPress={()=>setTimeCounting(!timeCounting)} />
+                <Button style={styles.btnColor} title="Reiniciar" onPress={showAlertRestart} />
             </View>
         </>
     );
 }
 
 export default Control;
+
+
+const styles = StyleSheet.create({
+    marginTnB: {
+        marginTop: 15,
+        marginBottom: 15,
+        gap: 15
+    },
+    boxControl: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    }
+});

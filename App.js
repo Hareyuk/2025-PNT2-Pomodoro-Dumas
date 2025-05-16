@@ -15,7 +15,7 @@ export default function App() {
           <View>
             {/* <Button title="Vibrar celular" onPress={vibrate} />
             <Button title="Vibrar Largo" onPress={vibrateLong} /> */}
-            <StatusBar style="auto" />
+            <StatusBar style="light" />
           </View>
         </View>
       </ImageBackground>

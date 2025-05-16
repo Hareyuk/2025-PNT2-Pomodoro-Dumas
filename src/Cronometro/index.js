@@ -5,9 +5,11 @@ import { vibrate, vibrateLong } from "../../utils";
 const Cronometro = ()=>
 {
     const {timeCounting, setTimeCounting, statusWork, toggleStatusWork, resetTimer, setResetTimer} = useContext(GlobalContext);
-    const fiveMinutes = 5 * 1;
-    const twentyFiveMinutes = 25 * 1;
-    const [timer, setTimer] = useState(twentyFiveMinutes);
+    const fiveMinutes = 5 * 60;
+    const twentyFiveMinutes = 25 * 60;
+    const [userWorkTime, setUserWorkTime] = useState(0);
+    const [userBreakTime, setUserBreakTime] = useState(0);
+    const [timer, setTimer] = useState(0);
     let interval = null;
     const getTxtAlarm = () =>
     {
@@ -31,6 +33,19 @@ const Cronometro = ()=>
         }
         ]);
     }
+
+    //Se ejecuta al iniciar el cronómetro
+    useEffect(() => {
+        if(statusWork === "work")
+        {
+            setTimer(twentyFiveMinutes);
+        }
+        else
+        {
+            setTimer(fiveMinutes);
+        }
+    }, []);
+
     //Se ejecuta según el estado de timeCounting
     useEffect(() =>
     {
@@ -81,7 +96,7 @@ const Cronometro = ()=>
             <View style={styles.centered}>
                 <View style={styles.insideCircle}>
                     <Text style={styles.whiteText}>Cronómetro</Text>
-                    <Text style={[styles.whiteText, styles.bigNumbers]}>{Math.floor(timer > 60 ? `0${timer / 60}` : "00")}:{timer % 60 > 9 ? timer % 60 : `0${timer % 60}`}</Text>
+                    <Text style={[styles.whiteText, styles.bigNumbers]}>{timer < 600 ? "0" : ""}{Math.floor(timer / 60)}:{timer % 60 > 9 ? timer % 60 : `0${timer % 60}`}</Text>
                     <Text style={styles.whiteText}>Modo {statusWork === "work" ? "trabajo" : "descanso"}</Text>
                 </View>
             </View>

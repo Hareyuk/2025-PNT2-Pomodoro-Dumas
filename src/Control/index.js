@@ -36,6 +36,9 @@ const Control = ()=>
                 <Button style={styles.btnColor} title={timeCounting ? "Pausar" : "Continuar"} onPress={()=>setTimeCounting(!timeCounting)} />
                 <Button style={styles.btnColor} title="Reiniciar" onPress={showAlertRestart} />
             </View>
+            <View style={[styles.marginTnB, styles.boxControl]}>
+                <Button style={styles.btnColor} title="Asignar tiempos" onPress={()=>{}} />
+            </View>
         </>
     );
 }

@@ -4,14 +4,21 @@ import { GlobalContext } from "../../hooks/globalContext";
 const Control = ()=>
 {
     const {timeCounting, setTimeCounting, toggleStatusWork, userWorkTime, setUserWorkTime, userBreakTime, setUserBreakTime, setResetTimer} = useContext(GlobalContext);
-    const [editTimes, setEditTimes] = useState(false);
-
+    const [editTimes, setEditTimes] = useState(null);
+    const [showMsg, setShowMsg] = useState(null);
+    const [txtMsg, setTxtMsg] = useState(null);
+    let setTimeoutMsg = null;
+    const msgRestart = "Los tiempos de trabajo y descanso han sido reiniciados a 25 y 5 minutos con éxito.";
+    const msgSaved = "Los tiempos de trabajo y descanso han sido guardados con éxito.";
     const resetDefaultTimes = () =>
     {
         setUserWorkTime(0);
         setUserBreakTime(0);
         setEditTimes(false);
         setResetTimer(true);
+        setTxtMsg(msgRestart);
+        setShowMsg(true);
+        
     }
     const showInputs = ()=>
     {
@@ -68,16 +75,30 @@ const Control = ()=>
         }
         ]);
     }
-
+    //Mensaje temproal
     useEffect(() =>
     {
-        setUserBreakTime(userBreakTime.toString().replace(/[^0-9]/g, ''));
-        setUserWorkTime(userWorkTime.toString().replace(/[^0-9]/g, ''));
-        if(userBreakTime < 1)
-            setUserBreakTime(0);
-        if(userWorkTime < 1)
-            setUserWorkTime(0);
-        setResetTimer(true);
+        if(showMsg)
+        {
+            setTimeoutMsg = setTimeout(() => {
+                setShowMsg(false);
+            }, 3000);
+        }
+    }, [showMsg]);
+    useEffect(() =>
+    {
+        if(!editTimes && editTimes != null) //Saving
+        {
+            setUserBreakTime(userBreakTime.toString().replace(/[^0-9]/g, ''));
+            setUserWorkTime(userWorkTime.toString().replace(/[^0-9]/g, ''));
+            if(userBreakTime < 1)
+                setUserBreakTime(0);
+            if(userWorkTime < 1)
+                setUserWorkTime(0);
+            setResetTimer(true);
+            setTxtMsg(msgSaved);
+            setShowMsg(true);
+        }
     }, [editTimes]);
     return(
         <>
@@ -87,9 +108,10 @@ const Control = ()=>
             </View>
             <View style={[styles.marginTnB, styles.boxControl]}>
                 <Button style={styles.btnColor} title={editTimes ? "Guardar tiempos" : "Asignar tiempos"} onPress={()=>setEditTimes(!editTimes)} />
-                <Button style={styles.btnColor} disabled={userBreakTime < 1 && userWorkTime < 1 ? true : false} title="Reiniciar tiempos" onPress={resetDefaultTimes} />
+                <Button style={styles.btnColor} disabled={userBreakTime < 1 && userWorkTime < 1 ? true : false} title="Restaurar tiempos" onPress={resetDefaultTimes} />
             </View>
             {editTimes ? showInputs() : ""}
+            {showMsg ? <Text style={styles.cyanText}>{txtMsg}</Text> : ""}
         </>
     );
 }
@@ -133,5 +155,12 @@ const styles = StyleSheet.create({
     },
     whiteText: {
     color: "#fff"
-    }
+    },
+    cyanText: {
+        color: "#5CD1CF",
+        marginTop: 15,
+        marginBottom: 15,
+        textAlign: "center",
+        width: "80%",
+    },
 });

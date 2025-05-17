@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 // Create the context
 export const GlobalContext = createContext();
@@ -9,7 +9,11 @@ export function GlobalProvider({ children }) {
   const [resetTimer, setResetTimer] = useState(false);
   const [userWorkTime, setUserWorkTime] = useState(25);
   const [userBreakTime, setUserBreakTime] = useState(5);
+  const [isStartingApp, setIsStartingApp] = useState(true);
 
+  useEffect(() => {
+    setIsStartingApp(false);
+  }, []);
   const toggleStatusWork = (newStatus) =>
   {
       if(newStatus != null)
@@ -33,7 +37,8 @@ export function GlobalProvider({ children }) {
         statusWork, toggleStatusWork,
         resetTimer, setResetTimer,
         userWorkTime, setUserWorkTime,
-        userBreakTime, setUserBreakTime}}>
+        userBreakTime, setUserBreakTime,
+        }}>
       {children}
     </GlobalContext.Provider>
   );

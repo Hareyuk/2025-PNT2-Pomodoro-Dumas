@@ -78,9 +78,9 @@ const Cronometro = ()=>
         if(resetTimer)
         {
             if(statusWork === "work")
-                userWorkTime == 0 ? setTimer(twentyFiveMinutes) : setTimer(userWorkTime * 60);
+                userWorkTime < 1 ? setTimer(twentyFiveMinutes) : setTimer(userWorkTime * 60);
             else
-                userBreakTime == 0 ? setTimer(fiveMinutes) : setTimer(userBreakTime * 60);
+                userBreakTime < 1 ? setTimer(fiveMinutes) : setTimer(userBreakTime * 60);
             setTimeCounting(true);
             setResetTimer(false);
         }

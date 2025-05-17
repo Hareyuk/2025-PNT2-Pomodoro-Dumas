@@ -3,9 +3,16 @@ import { Button, View, Alert, StyleSheet, TextInput, Text } from "react-native";
 import { GlobalContext } from "../../hooks/globalContext";
 const Control = ()=>
 {
-    const {timeCounting, setTimeCounting, toggleStatusWork, userWorkTime, setUserWorkTime, userBreakTime, setUserBreakTime} = useContext(GlobalContext);
+    const {timeCounting, setTimeCounting, toggleStatusWork, userWorkTime, setUserWorkTime, userBreakTime, setUserBreakTime, setResetTimer} = useContext(GlobalContext);
     const [editTimes, setEditTimes] = useState(false);
 
+    const resetDefaultTimes = () =>
+    {
+        setUserWorkTime(0);
+        setUserBreakTime(0);
+        setEditTimes(false);
+        setResetTimer(true);
+    }
     const showInputs = ()=>
     {
         return(
@@ -64,7 +71,13 @@ const Control = ()=>
 
     useEffect(() =>
     {
-        setTimeCounting(!editTimes);
+        setUserBreakTime(userBreakTime.toString().replace(/[^0-9]/g, ''));
+        setUserWorkTime(userWorkTime.toString().replace(/[^0-9]/g, ''));
+        if(userBreakTime < 1)
+            setUserBreakTime(0);
+        if(userWorkTime < 1)
+            setUserWorkTime(0);
+        setResetTimer(true);
     }, [editTimes]);
     return(
         <>
@@ -74,7 +87,7 @@ const Control = ()=>
             </View>
             <View style={[styles.marginTnB, styles.boxControl]}>
                 <Button style={styles.btnColor} title={editTimes ? "Guardar tiempos" : "Asignar tiempos"} onPress={()=>setEditTimes(!editTimes)} />
-                <Button style={styles.btnColor} title="Reiniciar tiempos" onPress={()=>{}} />
+                <Button style={styles.btnColor} disabled={userBreakTime < 1 && userWorkTime < 1 ? true : false} title="Reiniciar tiempos" onPress={resetDefaultTimes} />
             </View>
             {editTimes ? showInputs() : ""}
         </>

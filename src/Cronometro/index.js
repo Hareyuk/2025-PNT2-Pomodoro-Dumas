@@ -9,7 +9,7 @@ const Cronometro = ()=>
     const twentyFiveMinutes = 25 * 60;
     const [userWorkTime, setUserWorkTime] = useState(0);
     const [userBreakTime, setUserBreakTime] = useState(0);
-    const [timer, setTimer] = useState(0);
+    const [timer, setTimer] = useState(twentyFiveMinutes);
     let interval = null;
     const getTxtAlarm = () =>
     {

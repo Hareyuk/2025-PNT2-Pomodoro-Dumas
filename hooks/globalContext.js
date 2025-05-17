@@ -7,6 +7,8 @@ export function GlobalProvider({ children }) {
   const [timeCounting, setTimeCounting] = useState(false);
   const [statusWork, setStatusWork] = useState("work"); // work, break
   const [resetTimer, setResetTimer] = useState(false);
+  const [userWorkTime, setUserWorkTime] = useState(25);
+  const [userBreakTime, setUserBreakTime] = useState(5);
 
   const toggleStatusWork = (newStatus) =>
   {
@@ -29,7 +31,9 @@ export function GlobalProvider({ children }) {
     <GlobalContext.Provider value={{
         timeCounting, setTimeCounting,
         statusWork, toggleStatusWork,
-        resetTimer, setResetTimer}}>
+        resetTimer, setResetTimer,
+        userWorkTime, setUserWorkTime,
+        userBreakTime, setUserBreakTime}}>
       {children}
     </GlobalContext.Provider>
   );

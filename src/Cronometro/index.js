@@ -4,11 +4,9 @@ import { GlobalContext } from "../../hooks/globalContext";
 import { vibrate, vibrateLong } from "../../utils";
 const Cronometro = ()=>
 {
-    const {timeCounting, setTimeCounting, statusWork, toggleStatusWork, resetTimer, setResetTimer} = useContext(GlobalContext);
+    const {timeCounting, setTimeCounting, statusWork, toggleStatusWork, resetTimer, setResetTimer, userWorkTime, userBreakTime} = useContext(GlobalContext);
     const fiveMinutes = 5 * 60;
     const twentyFiveMinutes = 25 * 60;
-    const [userWorkTime, setUserWorkTime] = useState(0);
-    const [userBreakTime, setUserBreakTime] = useState(0);
     const [timer, setTimer] = useState(twentyFiveMinutes);
     let interval = null;
     const getTxtAlarm = () =>
@@ -44,6 +42,7 @@ const Cronometro = ()=>
         {
             setTimer(fiveMinutes);
         }
+        setTimeCounting(false);
     }, []);
 
     //Se ejecuta según el estado de timeCounting
@@ -79,13 +78,9 @@ const Cronometro = ()=>
         if(resetTimer)
         {
             if(statusWork === "work")
-            {
-                setTimer(twentyFiveMinutes);
-            }
+                userWorkTime == 0 ? setTimer(twentyFiveMinutes) : setTimer(userWorkTime * 60);
             else
-            {
-                setTimer(fiveMinutes);
-            }
+                userBreakTime == 0 ? setTimer(fiveMinutes) : setTimer(userBreakTime * 60);
             setTimeCounting(true);
             setResetTimer(false);
         }
